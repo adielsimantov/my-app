@@ -22,7 +22,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: arn:aws:iam::876576576587:role/counter-role
-          aws-region: ${{ secret.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
@@ -30,12 +30,12 @@ jobs:
       - name: Build Docker image
         run: |
           IMAGE_TAG=${GITHUB_SHA::7}
-          docker build -t ${{ secret.ECR_REPO_URL }}:$IMAGE_TAG .
+          docker build -t ${{ secrets.ECR_REPO_URL }}:$IMAGE_TAG .
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
       - name: Push Docker image to ECR
         run: |
-          docker push ${{ secret.ECR_REPO_URL }}:$IMAGE_TAG
+          docker push ${{ secrets.ECR_REPO_URL }}:$IMAGE_TAG
 
   deploy:
     runs-on: ubuntu-latest
@@ -55,9 +55,9 @@ jobs:
 
       - name: ArgoCD Login
         env:
-          ARGOCD_SERVER: ${{ secret.ARGOCD_SERVER }}
-          ARGOCD_USERNAME: ${{ secret.ARGOCD_USERNAME }}
-          ARGOCD_PASSWORD: ${{ secret.ARGOCD_PASSWORD }}
+          ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
+          ARGOCD_USERNAME: ${{ secrets.ARGOCD_USERNAME }}
+          ARGOCD_PASSWORD: ${{ secrets.ARGOCD_PASSWORD }}
         run: |
           argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure
 
