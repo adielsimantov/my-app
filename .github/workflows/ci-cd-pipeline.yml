@@ -33,12 +33,12 @@ jobs:
       - name: Build Docker image
         run: |
           IMAGE_TAG=prod
-          docker build -t ${{ env.ECR_REPO_URL }}:$IMAGE_TAG .
+          docker build -t ${{ vars.ECR_REPO_URL }}:$IMAGE_TAG .
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
       - name: Push Docker image to ECR
         run: |
-          docker push ${{ env.ECR_REPO_URL }}:$IMAGE_TAG
+          docker push ${{ vars.ECR_REPO_URL }}:$IMAGE_TAG
 
   deploy:
     runs-on: ubuntu-latest
@@ -58,8 +58,8 @@ jobs:
 
       - name: ArgoCD Login
         env:
-          ARGOCD_SERVER: ${{ env.ARGOCD_SERVER }}
-          ARGOCD_USERNAME: ${{ env.ARGOCD_USERNAME }}
+          ARGOCD_SERVER: ${{ vars.ARGOCD_SERVER }}
+          ARGOCD_USERNAME: ${{ vars.ARGOCD_USERNAME }}
           ARGOCD_PASSWORD: ${{ secrets.ARGOCD_PASSWORD }}
         run: |
           argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure
