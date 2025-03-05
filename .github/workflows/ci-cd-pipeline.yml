@@ -41,15 +41,12 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-#      - name: Check out code
-#        uses: actions/checkout@v3
-
-      # - name: Install ArgoCD CLI
-      #   run: |
-      #     VERSION=$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-      #     curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/$VERSION/argocd-linux-amd64
-      #     chmod +x argocd-linux-amd64
-      #     sudo mv argocd-linux-amd64 /usr/local/bin/argocd
+#       - name: Install ArgoCD CLI
+#         run: |
+#           VERSION=$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+#           curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/$VERSION/argocd-linux-amd64
+#           chmod +x argocd-linux-amd64
+#           sudo mv argocd-linux-amd64 /usr/local/bin/argocd
 
       - name: ArgoCD Login && Sync
         env:
@@ -61,9 +58,8 @@ jobs:
               argocd login $ARGOCD_SERVER \
               --username $ARGOCD_USERNAME \
               --password $ARGOCD_PASSWORD \
-              --skip-test-tls --http-retry-max 3 --grpc-web && \
-              argocd app sync counter
+              --skip-test-tls --http-retry-max 3 --grpc-web
 
-#      - name: Sync ArgoCD app
-#        run: |
-#          argocd app sync counter-app
+      - name: Sync ArgoCD app
+        run: |
+          argocd app sync counter
