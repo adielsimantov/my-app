@@ -40,7 +40,7 @@ jobs:
     needs: build
     if: github.ref == 'refs/heads/main'
 
-#    steps:
+    steps:
 #      - name: Check out code
 #        uses: actions/checkout@v3
 
