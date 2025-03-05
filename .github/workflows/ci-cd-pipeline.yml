@@ -41,8 +41,8 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+#      - name: Check out code
+#        uses: actions/checkout@v3
 
       # - name: Install ArgoCD CLI
       #   run: |
@@ -57,7 +57,10 @@ jobs:
           ARGOCD_USERNAME: ${{ vars.ARGOCD_USERNAME }}
           ARGOCD_PASSWORD: ${{ secrets.ARGOCD_PASSWORD }}
         run: |
-          docker run --rm argoproj/argocd-cli:v0.10.6 argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure 
+          docker run --rm argoproj/argocd-cli:v0.10.6 argocd login $ARGOCD_SERVER \
+              --username $ARGOCD_USERNAME \
+              --password $ARGOCD_PASSWORD \
+              --insecure --http-retry-max 3
 # argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure
 
       - name: Sync ArgoCD app
