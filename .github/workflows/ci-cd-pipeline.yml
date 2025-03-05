@@ -16,11 +16,6 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      # - name: Set up Python
-      #   uses: actions/setup-python@v4
-      #   with:
-      #     python-version: '3.x'
-
       - name: Configure AWS Credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -49,12 +44,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Install ArgoCD CLI
-        run: |
-          VERSION=$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-          curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/$VERSION/argocd-linux-amd64
-          chmod +x argocd-linux-amd64
-          sudo mv argocd-linux-amd64 /usr/local/bin/argocd
+      # - name: Install ArgoCD CLI
+      #   run: |
+      #     VERSION=$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+      #     curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/$VERSION/argocd-linux-amd64
+      #     chmod +x argocd-linux-amd64
+      #     sudo mv argocd-linux-amd64 /usr/local/bin/argocd
 
       - name: ArgoCD Login
         env:
@@ -62,15 +57,8 @@ jobs:
           ARGOCD_USERNAME: ${{ vars.ARGOCD_USERNAME }}
           ARGOCD_PASSWORD: ${{ secrets.ARGOCD_PASSWORD }}
         run: |
-          argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure
-
-      - name: Update ArgoCD app with new image
-        run: |
-          IMAGE_TAG=${{ env.IMAGE_TAG }}
-          argocd app set counter-app \
-            --parameter image.repository=${{ env.ECR_REPO_URL }} \
-            --parameter image.tag=$IMAGE_TAG \
-            --namespace counter
+          docker run --rm argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure argoproj/argocd-cli
+# argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure
 
       - name: Sync ArgoCD app
         run: |
