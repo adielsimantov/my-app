@@ -42,7 +42,7 @@ jobs:
 
     steps:
       - name: argocd login
-      - uses: clowdhaus/argo-cd-action/@main
+        uses: clowdhaus/argo-cd-action/@main
         env:
           ARGOCD_SERVER: ${{ vars.ARGOCD_SERVER }}
           ARGOCD_USERNAME: ${{ vars.ARGOCD_USERNAME }}   
@@ -54,14 +54,14 @@ jobs:
 
 
       - name: Set new image for helm parameter
-      - uses: clowdhaus/argo-cd-action/@main
+        uses: clowdhaus/argo-cd-action/@main
         with:
           version: 2.6.7   
           command: app set counter -p image=${{ vars.ECR_REPO_URL }}:$IMAGE_TAG
         
 
       - name: Sync app
-      - uses: clowdhaus/argo-cd-action/@main
+        uses: clowdhaus/argo-cd-action/@main
         with: 
           version: 2.6.7
           command: app sync counter
