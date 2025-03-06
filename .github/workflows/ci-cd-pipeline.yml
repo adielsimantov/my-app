@@ -16,6 +16,13 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
+      - name: Yamlint
+        uses: karancode/yamllint-github-action@master
+        with:
+          yamllint_file_or_dir: 'helm/templates/'
+          yamllint_strict: false
+          yamllint_comment: false
+
       - name: Configure AWS Credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v3
         with:
