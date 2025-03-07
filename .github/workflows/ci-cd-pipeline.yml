@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - cd-pipeline
 permissions:
   id-token: write
   contents: read
@@ -25,15 +25,23 @@ jobs:
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build Docker image
-        run: |
-          IMAGE_TAG=${GITHUB_SHA::7}
-          docker build -t ${{ vars.ECR_REPO_URL }}:$IMAGE_TAG .
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        env: 
+          IMAGE_TAG: ${GITHUB_SHA::7}
+        with:
+          push: true
+          tags: ${{ vars.ECR_REPO_URL }}:$IMAGE_TAG
 
-      - name: Push Docker image to ECR
-        run: |
-          docker push ${{ vars.ECR_REPO_URL }}:$IMAGE_TAG
+      # - name: Build Docker image
+      #   run: |
+      #     IMAGE_TAG=${GITHUB_SHA::7}
+      #     docker build -t ${{ vars.ECR_REPO_URL }}:$IMAGE_TAG .
+      #     echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
+      # - name: Push Docker image to ECR
+      #   run: |
+      #     docker push ${{ vars.ECR_REPO_URL }}:$IMAGE_TAG
 
   deploy:
     runs-on: ubuntu-latest
