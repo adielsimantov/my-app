@@ -50,8 +50,8 @@ jobs:
           ARGOCD_PASSWORD: ${{ secrets.ARGOCD_PASSWORD }}
         with:
           version: 2.6.7
-          command: login $ARGOCD_SERVER
-          options: --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure --skip-test-tls --http-retry-max 3 --grpc-web
+          command: login ${{ env.ARGOCD_SERVER }}
+          options: --username ${{ env.ARGOCD_USERNAME }} --password ${{ env.ARGOCD_PASSWORD }} --insecure --skip-test-tls --http-retry-max 3 --grpc-web
 
 
       - name: Set new image for helm parameter
