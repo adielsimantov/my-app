@@ -60,7 +60,7 @@ jobs:
         uses: clowdhaus/argo-cd-action/@main
         with:
           version: 2.6.7   
-          command: app set counter-app -p image.repository=${{ vars.ECR_REPO_URL }}:${{ needs.build.outputs.IMAGE_TAG }}
+          command: app set counter -p image.repository=${{ vars.ECR_REPO_URL }}:${{ needs.build.outputs.IMAGE_TAG }}
         
 
       - name: Sync app
